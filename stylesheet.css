@@ -1,0 +1,132 @@
+/* --- Custom stylesheet --- */
+
+/*=========================================================================*/
+
+/* Slide text */
+.slide-class {
+    font-family: Lato;
+    font-size: 5em;
+    text-align: center;
+    margin: auto;
+    width: 55%;
+}
+
+/* Intro text */
+.intro-text {
+    font-family: Lato;
+    font-size: 0.5em;
+    text-align: center;
+    margin: auto;
+    width: 100%;
+}
+
+.dummy-svg {
+    margin: 0;
+    padding: 0;
+}
+
+#country-dropdown-selector {
+    margin: 0;
+    padding: 0;
+}
+
+.custom-left-text-block {
+    font-family: Times New Roman;
+    font-size: 0.3em;
+    float: left;
+    position: fixed;
+    top: 0 px;
+    left: 15px;
+    width: 450px;
+    text-align: left;
+}
+
+.custom-right-text-block {
+    font-family: Times New Roman;
+    font-size: 0.3em;
+    float: right;
+    position: fixed;
+    top: 200px;
+    left: 1450px;
+    width: 450px;
+    text-align: left;
+}
+
+.intro-subtext {
+    font-family: Lato;
+    font-size: 0.85em;
+}
+
+/* Intro text */
+.global-temp-text {
+    font-family: Lato;
+    font-size: 0.5em;
+    text-align: center;
+    margin: auto;
+    width: 55%;
+}
+
+.left-gas-cards {
+    float: left;
+    font-family: Lato;
+    font-size: 0.5em;
+}
+/* Hide the images on start */
+/* .slide-class { */
+    /* display: none; */
+/* } */
+
+/* Next & previous buttons */
+.prev-button, .next-button {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    width: auto;
+    margin-top: -22px;
+    padding: 16px;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    transition: 0.6s ease;
+    border-radius: 0 3px 3px 0;
+    user-select: none;
+    background-color: rgba(0,0,0,0.8);
+}
+
+/* Position the "next button" to the right */
+.next-button {
+    right: 0;
+    border-radius: 3px 0 0 3px;
+}
+  
+  /* On hover, add a black background color with a little bit see-through */
+.prev-button:hover, .next-button:hover {
+    background-color: rgba(0,0,0,0.8);
+}
+
+.index {
+    color: gray;
+    font-size: 0.5em;
+    position: fixed;
+    left: 95%;
+    bottom: 10px;
+    margin: 0 auto;
+    transform: translate(-50%, -50%);
+}
+
+
+/* Fading animation */
+.custom-fade {
+    animation-name: fade;
+    animation-duration: 1.5s;
+  }
+  
+  @keyframes custom-fade {
+    from {opacity: .4}
+    to {opacity: 1}
+  }
+
+  .test-svg {
+    display: block;
+  }
+  

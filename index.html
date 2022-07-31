@@ -1,0 +1,835 @@
+<!-- Climate Change Analysis: Narrative visualization project for CS 416 -->
+<!-- Built with D3 JS, HTML, CSS, vanilla JS  -->
+<!-- By Harris Mohamed -->
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- Metadata -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="Climate change analysis and visualization">
+        <meta name="author" content="Harris Mohamed">
+        <title>Climate Change Analysis by Harris Mohamed</title>
+
+        <!-- CSS links -->
+        <link rel="stylesheet" href="./stylesheet.css">
+
+        <!-- Fonts -->
+        <link href="https://fonts.googleapis.com/css?family=Titillium+Web:200,300,400,600,700" rel="stylesheet">
+        <link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet'>
+
+        <!-- JS links -->
+        <script src='https://d3js.org/d3.v5.min.js'></script>
+    </head>
+
+    <body onload="init()">
+        <!-- Slideshow div -->
+        <div class="overall-slideshow-container">
+
+            <!-- (1) Introduction slide -->
+            <div class="slide-class customFade">
+                <p class="index"> 1 / 4 </p>
+                <div class="intro-text">
+                    <h4> Climate Change: An Investigation into potential causes </h4>
+                    <p class="intro-subtext"> Climate change has long been a contentious topic globally.</p>
+                    <p class="intro-subtext"> Scientists and academics conclude that humanity has been harmful towards the Earth, and this behavior is not sustainable.</p>
+                    <p class="intro-subtext"> Skeptics claim that there is no real harm being done to the Earth.</p>
+                    <p class="intro-subtext"> Here, we will take a look at the data and come to our own conclusion.</p>
+                    <p class="intro-subtext"> Use the arrows on either side to navigate this visualization.</p>
+                </div>
+            </div>
+ 
+            <!-- (2) Analysis of surface temperature -->
+            <div class="slide-class customFade">
+                <p class="index"> 2 / 4 </p>
+                <div class="global-temp-text"> Surface temperature anomalies </div>
+                <div class="custom-left-text-block">We begin with an analysis of surface temperature anomalies over time. These values are relative to 1961-1990.
+                    <br> <br> Surface temperature is one of the biggest symptoms scientists claim is a result of climate change. 
+                    <br> <br> The cause for this temperature increase could be attributed to many things, one of which we will explore on the next slide.
+                    <br> <br> A change in temperature of 1°C is significant. That is all it took to plunge the Earth into a little Ice Age.
+                </div>
+                <div class="custom-right-text-block">
+                    <br> <br> (1) This is the largest value before the 2000's.
+                    <br> <br> (2) This is a relative change of 1°C. A change of 5°C was enough to bury parts of North America under ice 20,000 years ago.
+                </div>
+                <svg class="global-temp-svg" width=1000 height=800 onload="populateGlobalTempsChart()"></svg>
+            </div>
+
+            <!-- (3) Sea level analysis over time -->
+            <div class="slide-class customFade">
+                <p class="index"> 3 / 4 </p>
+                <div class="global-temp-text"> Sea level analysis </div>
+                <div class="custom-left-text-block">We now move to an analysis of ocean levels over time.
+                    <br> <br> This is measured as a change relative to 1880. 
+                    <br> <br> Sea level rises due to glaciers and ice sheets melting. Furthermore, as sea water warms, it expands.
+                    <br> <br> High sea levels will result in flooding, shoreline erosion, and more hazardou
+                </div>
+                <div class="custom-right-text-block">
+                    <br> <br> (1) Roughly linear increase in sea level up until 2000
+                    <br> <br> (2) Sea level increase is still linear, but is accelerating (the slope is higher). Sea level increase is getting worse as time progresses.
+                </div>
+                <svg class="global-sea-levels" width=1000 height=800 onload="populateSeaLevelsChart()"></svg>
+            </div>
+
+            <!-- (4) Greenhouse gas emissions analysis -->
+            <div class="slide-class customFade">
+                <p class="index"> 4 / 4 </p>
+                <div class="global-temp-text"> Greenhouse gas emissions </div>
+
+                <div class="custom-left-text-block">Up until now, we have been analyzing symptoms of climate change. We will now look at the cause: Greenhouse gas emissions.
+                    <br> <br> Greenhouse gas emissions are comprised of CO2, Methane, and Nitrous Oxide. The biggest cause of this is burning fossil fuels (coal, natural gas, and petroleum).
+                    <br> <br> This varies quite a bit depending on what country you are looking at.
+                </div>
+                <div class="custom-right-text-block">
+                    <br> <br> Use the dropdown to select a country to see its greenhouse gas emissions over time!
+                </div>
+                <select onchange="populateGasEmissionChart()" onload="populateDropdown()" id="country-dropdown-selector"></select>
+                <svg class="dummy-svg" onload="populateDropdown()" width=0 height=0></svg>
+                <svg class="gas-emission-svg" width=1000 height=800 onload="populateGasEmissionChart(0)"></svg>
+            </div>
+        
+<!--
+            <div class="slide-class customFade">
+                <p class="index"> 5 / 5 </p>
+                <div class="intro-text">
+                    <h4> Climate Change: An Investigation into potential causes </h4>
+                    <p class="intro-subtext"> This concludes the analysis.</p>
+                    <p class="intro-subtext"> I hope you learned something.</p>
+                    <p class="intro-subtext"> Skeptics claim that there is no real harm being done to the Earth.</p>
+                    <p class="intro-subtext"> Here, we will take a look at the data and come to our own conclusion.</p>
+                    <p class="intro-subtext"> Use the arrows on either side to navigate this visualization.</p>
+                </div>
+            </div>
+-->
+
+            <a class="prev-button" onclick="plusSlides(-1)">&#10094;</a>
+            <a class="next-button" onclick="plusSlides(1)">&#10095;</a>
+        </div>
+    
+    <script>
+    // Vanilla JS code below
+
+
+    // Utility functions
+    let slideIndex = 1;
+
+    function init() {
+        showSlides(slideIndex);
+    }
+
+    // Next/previous controls
+    function plusSlides(n) {
+        showSlides(slideIndex += n);
+    }
+
+    // Thumbnail image controls
+    function currentSlide(n) {
+        showSlides(slideIndex = n);
+    }
+
+    function showSlides(n) {
+        let i;
+        let slides = document.getElementsByClassName("slide-class");
+
+        if (n > slides.length) {
+            slideIndex = 1
+        }
+
+        if (n < 1) {
+            slideIndex = slides.length
+        }
+
+        for (i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none";
+        }
+
+        slides[slideIndex-1].style.display = "block";
+    } 
+
+    async function filterEmissionsGraph() {
+        var selectedCountry = document.getElementById("country-dropdown-selector").innerHTML;
+    }
+
+     // D3 JS code below 
+
+    var margin = {top: 80, right: 30, bottom: 80, left: 80};
+    var width = 1000 - margin.left - margin.right;
+    var height = 800 - margin.top - margin.bottom;
+
+    var global_temp_svg = 
+        d3.select('.global-temp-svg')
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    async function populateDropdown() {
+        dropdown_data = await d3.csv('./data/dropdown_labels.csv');
+
+        // Populate the dropdown 
+        var dropdown = document.getElementById("country-dropdown-selector");
+        const dropdown_items = [];
+
+        for (let i = 0; i < dropdown_data.length; i++){
+            dropdown_items.push(dropdown_data[i].Country);
+            var current_option = document.createElement("option");
+            if (dropdown_data[i].Country == "Global") {
+                current_option.selected = "selected";
+            }
+            current_option.textContent = dropdown_data[i].Country;
+            current_option.value = dropdown_data[i].Country;
+            dropdown.add(current_option);
+        }
+    }
+
+    async function populateGlobalTempsChart() {
+        data = await d3.csv('./data/had5_corrected.csv');
+
+        const year_list = [];
+        const temp_list = [];
+
+        for (let i = 0; i < data.length; i++){
+            year_list.push({date : d3.timeParse("%Y")(data[i].Year), value : data[i].Value});
+            temp_list.push(parseFloat(data[i].Value));
+        }
+
+        var x = d3.scaleTime().domain(d3.extent(year_list, function(d) { return d.date; })).range([0, width]).nice();
+        var y = d3.scaleLinear().domain([d3.min(temp_list, function(d) { return -d; }), d3.max(temp_list, function(d) { return +d; })]).range([height, 0]).nice();
+
+        global_temp_svg.append("g")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x));
+
+        global_temp_svg.append("g")
+        .call(d3.axisLeft(y));
+
+        global_temp_svg.append("path")
+        .attr("fill", "none")
+        .attr("stroke", "#FF6961")
+        .attr("stroke-width", 1.5)
+        .datum(year_list)
+        .attr("d", d3.line()
+            .x(function(d) { return x(d.date); })
+            .y(function(d) { return y(d.value); })
+            )
+
+        global_temp_svg.append("text")
+        .attr("text-anchor", "middle")
+        .attr("font-family", "Times New Roman")
+        .attr("font-size", "0.2em")
+        .attr("y", height + 40)
+        .attr("x", width / 2)
+        .text("Year");
+
+        global_temp_svg.append("text")
+        .attr("text-anchor", "middle")
+        .attr("font-family", "Times New Roman")
+        .attr("transform", "rotate(-90)")
+        .attr("font-size", "0.2em")
+        .attr("y", 0 - (margin.left / 2))
+        .attr("x", 0 - (height / 2))
+        .text("Annual Temperature Anomalies in °C");
+
+        global_temp_svg.append("circle")
+        .attr("id", "circleCustomTooltip")
+        .attr("cx", x(year_list[76].date))
+        .attr("cy", y(year_list[76].value))
+        .attr("r", 5)
+        .attr("fill", "#C23B22")
+
+        global_temp_svg.append("text")
+        .attr("text-anchor", "middle")
+        .attr("font-family", "Times New Roman")
+        .attr("font-size", "0.2em")
+        .attr("y", y(year_list[76].value) - 20)
+        .attr("x", x(year_list[76].date))
+        .text("(1)");
+
+        global_temp_svg.append("circle")
+        .attr("id", "circleCustomTooltip")
+        .attr("cx", x(year_list[101].date))
+        .attr("cy", y(year_list[101].value))
+        .attr("r", 5)
+        .attr("fill", "#C23B22")
+
+        global_temp_svg.append("text")
+        .attr("text-anchor", "middle")
+        .attr("font-family", "Times New Roman")
+        .attr("font-size", "0.2em")
+        .attr("y", y(year_list[101].value) - 20)
+        .attr("x", x(year_list[101].date))
+        .text("(2)");
+    }
+
+    var global_sea_levels_svg = 
+        d3.select('.global-sea-levels')
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    async function populateSeaLevelsChart() {
+        data = await d3.csv('./data/sea_levels.csv');
+
+        const mod_data = [];
+
+        for (let i = 0; i < data.length; i++){
+            mod_data.push({year: d3.timeParse("%Y")(data[i].Time), value: data[i].GMSL});
+        }
+
+        var x = d3.scaleTime().domain(d3.extent(mod_data, function(d) { return d.year; })).range([0, width]).nice();
+        var y = d3.scaleLinear().domain([0, d3.max(mod_data, function(d) { return +d.value; })]).range([height, 0]).nice();
+
+        global_sea_levels_svg.append("g")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x));
+
+        global_sea_levels_svg.append("g")
+        .call(d3.axisLeft(y));
+
+        global_sea_levels_svg.append("path")
+        .datum(mod_data)
+        .attr("fill", "none")
+        .attr("stroke", "#78A2CC")
+        .attr("stroke-width", 1.5)
+        .attr("d", d3.line()
+            .x(function(d) { return x(d.year); })
+            .y(function(d) { return y(d.value); })
+            )
+
+        global_sea_levels_svg.append("text")
+        .attr("text-anchor", "middle")
+        .attr("font-family", "Times New Roman")
+        .attr("font-size", "0.2em")
+        .attr("y", height + 40)
+        .attr("x", width / 2)
+        .text("Year");
+
+        global_sea_levels_svg.append("text")
+        .attr("text-anchor", "middle")
+        .attr("font-family", "Times New Roman")
+        .attr("transform", "rotate(-90)")
+        .attr("font-size", "0.2em")
+        .attr("y", 0 - (margin.left / 2))
+        .attr("x", 0 - (height / 2))
+        .text("Reconstructed global sea level (mm)");
+
+        global_sea_levels_svg.append("circle")
+        .attr("id", "circleCustomTooltip")
+        .attr("cx", x(mod_data[6].year))
+        .attr("cy", y(mod_data[6].value))
+        .attr("r", 5)
+        .attr("fill", "#AEC6CF")
+
+        global_sea_levels_svg.append("text")
+        .attr("text-anchor", "middle")
+        .attr("font-family", "Times New Roman")
+        .attr("font-size", "0.2em")
+        .attr("y", y(mod_data[6].value) - 20)
+        .attr("x", x(mod_data[6].year))
+        .text("(1)");
+
+        global_sea_levels_svg.append("circle")
+        .attr("id", "circleCustomTooltip")
+        .attr("cx", x(mod_data[19].year))
+        .attr("cy", y(mod_data[19].value))
+        .attr("r", 5)
+        .attr("fill", "#AEC6CF")
+
+        global_sea_levels_svg.append("text")
+        .attr("text-anchor", "middle")
+        .attr("font-family", "Times New Roman")
+        .attr("font-size", "0.2em")
+        .attr("y", y(mod_data[19].value) - 20)
+        .attr("x", x(mod_data[19].year))
+        .text("(2)");
+    }
+
+    var gas_emission_svg = 
+        d3.select('.gas-emission-svg')
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    async function populateGasEmissionChart(country) {
+        data = await d3.csv('./data/real_real_dropdown.csv');
+
+        const t_data = [];
+
+        if (country == 0) {
+            for (let i = 0; i < data.length; i++){
+                if (data[i].Year != "Global") {
+                    t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].Global});
+                }
+            }
+        } else {
+            let stringCountry = document.getElementById("country-dropdown-selector").value;
+            switch(stringCountry) {
+                case 'Argentina': 
+                    for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].Argentina});
+                        }
+                    }
+                        break
+                case 'Australia': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].Australia});
+                        }
+                    }
+                    break
+                case 'Austria': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].Austria});
+                        }
+                    }
+                    break
+                case 'Belarus': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].Belarus});
+                        }
+                    }
+                    break
+                case 'Belgium': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].Argentina});
+                        }
+                    }
+                    break
+                case 'Brazil': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].Brazil});
+                        }
+                    }
+                    break
+                case 'Bulgaria': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].Bulgaria});
+                        }
+                    }
+                    break
+                case 'Canada': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].Canada});
+                        }
+                    }
+                    break
+                case 'Chile': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].Chile});
+                        }
+                    }
+                    break
+                case 'China': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].China});
+                        }
+                    }
+                    break
+                case 'Colombia': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].Colombia});
+                        }
+                    }
+                    break
+                case 'Costa Rica': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].CostaRica});
+                        }
+                    }
+                    break
+                case 'Croatia': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].Croatia});
+                        }
+                    }
+                    break
+                case 'Cyprus': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].Cyprus});
+                        }
+                    }
+                    break
+                case 'Czech Republic': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].CzechRepublic});
+                        }
+                    }
+                    break
+                case 'Denmark': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].Denmark});
+                        }
+                    }
+                    break
+                case 'Estonia': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].Estonia});
+                        }
+                    }
+                    break
+                case 'Finland': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].Finland});
+                        }
+                    }
+                    break
+                case 'France': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].France});
+                        }
+                    }
+                    break
+                case 'Germany': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].Germany});
+                        }
+                    }
+                    break
+                case 'Greece': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].Greece});
+                        }
+                    }
+                    break
+                case 'Hungary': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].Hungary});
+                        }
+                    }
+                    break
+                case 'Iceland': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].Iceland});
+                        }
+                    }
+                    break
+                case 'India': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].India});
+                        }
+                    }
+                    break
+                case 'Indonesia': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].Indonesia});
+                        }
+                    }
+                    break
+                case 'Iran': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].Iran});
+                        }
+                    }
+                    break
+                case 'Ireland': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].Ireland});
+                        }
+                    }
+                    break
+                case 'Israel': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].Israel});
+                        }
+                    }
+                    break
+                case 'Italy': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].Italy});
+                        }
+                    }
+                    break
+                case 'Japan': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].Japan});
+                        }
+                    }
+                    break
+                case 'Kazakhstan': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].Kazakhstan});
+                        }
+                    }
+                    break
+                case 'Korea': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].Korea});
+                        }
+                    }
+                    break
+                case 'Latvia': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].Latvia});
+                        }
+                    }
+                    break
+                case 'Liechtenstein': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].Liechtenstein});
+                        }
+                    }
+                    break
+                case 'Lithuania': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].Lithuania});
+                        }
+                    }
+                    break
+                case 'Luxembourg': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].Luxembourg});
+                        }
+                    }
+                    break
+                case 'Malta': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].Malta});
+                        }
+                    }
+                    break
+                case 'Mexico': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].Mexico});
+                        }
+                    }
+                    break
+                case 'Monaco': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].Monaco});
+                        }
+                    }
+                    break
+                case 'Netherlands': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].Netherlands});
+                        }
+                    }
+                    break
+                case 'New Zealand': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].NewZealand});
+                        }
+                    }
+                    break
+                case 'Norway': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].Norway});
+                        }
+                    }
+                    break
+                case 'Peru': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].Peru});
+                        }
+                    }
+                    break
+                case 'Poland': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].Poland});
+                        }
+                    }
+                    break
+                case 'Portugal': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].Portugal});
+                        }
+                    }
+                    break
+                case 'Romania': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].Romania});
+                        }
+                    }
+                    break
+                case 'Russia': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].Russia});
+                        }
+                    }
+                    break
+                case 'Saudi Arabia': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].SaudiArabia});
+                        }
+                    }
+                    break
+                case 'Slovak Republic': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].SlovakRepublic});
+                        }
+                    }
+                    break
+                case 'Slovenia': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].Slovenia});
+                        }
+                    }
+                    break
+                case 'South Africa': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].SouthAfrica});
+                        }
+                    }
+                    break
+                case 'Spain': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].Spain});
+                        }
+                    }
+                    break
+                case 'Sweden': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].Sweden});
+                        }
+                    }
+                    break
+                case 'Switzerland': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].Switzerland});
+                        }
+                    }
+                    break
+                case 'Ukraine': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].Ukraine});
+                        }
+                    }
+                    break
+                case 'United Kingdom': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].UnitedKingdom});
+                        }
+                    }
+                    break
+                case 'United States': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].UnitedStates});
+                        }
+                    }
+                    break
+                case 'Global': 
+                for (let i = 0; i < data.length; i++){
+                        if (data[i].Year != "Global") {
+                            t_data.push({year: d3.timeParse("%Y")(data[i].Year), value: data[i].Global});
+                        }
+                    }
+                    break
+
+            }
+        }
+
+        var x = d3.scaleTime().domain(d3.extent(t_data, function(d) { return d.year; })).range([0, width]).nice();
+        var y = d3.scaleLinear().domain([0, d3.max(t_data, function(d) { return d.value / 1000000; })]).range([height, 0]).nice();
+
+
+        gas_emission_svg.append("g")
+        .attr("transform", "translate(0," + height + ")")
+        .attr("id", "emissionsXAxis")
+        .call(d3.axisBottom(x));
+
+        gas_emission_svg.append("g")
+        .attr("id", "emissionsYAxis")
+        .call(d3.axisLeft(y));
+
+        if (!d3.select("#lineChart").empty()) {
+            var currentLineChart = d3.select("#lineChart");
+            currentLineChart.remove();
+            d3.select("#emissionsXAxis").remove();
+            d3.select("#emissionsYAxis").remove();
+            d3.select("#XAxisText").remove();
+            d3.select("#YAxisText").remove();
+        }
+
+        gas_emission_svg.append("path")
+        .datum(t_data)
+        .attr("fill", "none")
+        .attr("stroke", "#77DD77")
+        .attr("stroke-width", 1.5)
+        .attr("id", "lineChart")
+        .attr("d", d3.line()
+            .x(function(d) { return x(d.year); })
+            .y(function(d) { return y(d.value / 1000000); })
+            )
+
+        gas_emission_svg.append("text")
+        .attr("text-anchor", "middle")
+        .attr("font-family", "Times New Roman")
+        .attr("font-size", "0.2em")
+        .attr("id", "XAxisText")
+        .attr("y", height  + 40)
+        .attr("x", width / 2)
+        .text("Year");
+
+        gas_emission_svg.append("text")
+        .attr("text-anchor", "middle")
+        .attr("font-family", "Times New Roman")
+        .attr("transform", "rotate(-90)")
+        .attr("font-size", "0.2em")
+        .attr("id", "YAxisText")
+        .attr("y", 0 - (margin.left / 2))
+        .attr("x", 0 - (height / 2))
+        .text("Tons of CO2 equivalent (in billions)");
+
+    }
+    </script>
+    </body>
+</html>
